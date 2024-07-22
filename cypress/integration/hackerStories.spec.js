@@ -94,21 +94,38 @@ describe('Hacker Stories', () => {
           .and('contain', 'Icons made by Freepik from www.flaticon.com')
       })
 
-      // Since the API is external,
-      // I can't control what it will provide to the frontend,
-      // and so, how can I assert on the data?
-      // This is why this test is being skipped.
-      // TODO: Find a way to test it out.
-      it.skip('shows the right data for all rendered stories', () => {})
+      context('List of stories', () => {
+        it.only('shows the right data for all rendered stories', () => {
+          const stories = require('../fixtures/stories.json')
   
-      it('shows one less story after dimissing the first one', () => {
-        cy.get('.button-small')
-          .first()
-          .click()
-  
-        cy.get('.item').should('have.length', 1) // since we have 2 stories at the stories.json
+          cy.get('.item')
+            .first()
+            .should('contain', stories.hits[0].title)
+            .should('contain', stories.hits[0].author)
+            .should('contain', stories.hits[0].num_comments)
+            .should('contain', stories.hits[0].points)
+          cy.get(`.item a:contains(${stories.hits[0].title})`)
+            .should('have.attr', 'href', stories.hits[0].url)
+            
+          cy.get('.item')
+            .last()
+            .should('contain', stories.hits[1].title)
+            .should('contain', stories.hits[1].author)
+            .should('contain', stories.hits[1].num_comments)
+            .should('contain', stories.hits[1].points)
+          cy.get(`.item a:contains(${stories.hits[1].title})`)
+            .should('have.attr', 'href', stories.hits[1].url)
+        })
+    
+        it('shows one less story after dimissing the first one', () => {
+          cy.get('.button-small')
+            .first()
+            .click()
+    
+          cy.get('.item').should('have.length', 1) // since we have 2 stories in the stories.json
+        })
       })
-
+      
       // Since the API is external,
       // I can't control what it will provide to the frontend,
       // and so, how can I test ordering?
