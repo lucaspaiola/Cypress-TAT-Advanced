@@ -132,11 +132,6 @@ describe('Hacker Stories', () => {
           cy.get('.item').should('have.length', 1) // since we have 2 stories in the stories.json
         })
 
-        // Since the API is external,
-        // I can't control what it will provide to the frontend,
-        // and so, how can I test ordering?
-        // This is why these tests are being skipped.
-        // TODO: Find a way to test them out.
         context('Order by', () => {
           it('orders by title', () => {
             cy.get('.list-header-button:contains(Title)')
@@ -306,9 +301,12 @@ describe('Hacker Stories', () => {
               .type(`${faker.random.word()}{enter}`)
             cy.wait('@getRandomStories')
           })
-  
-          cy.get('.last-searches button')
-            .should('have.length', 5)
+
+          cy.get('.last-searches')
+            .within(() => {
+              cy.get('button')
+                .should('have.length', 5)
+            })
         })
       })
     })
