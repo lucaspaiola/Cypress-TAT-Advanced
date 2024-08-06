@@ -61,11 +61,17 @@ describe('Hacker Stories', () => {
         .clear()
         .type(`${newTerm}{enter}`)
 
-        cy.wait('@getNewTermStories')
+      cy.wait('@getNewTermStories')
+
+      cy.getLocalStorage('search')
+        .should('be.equal', newTerm)
 
       cy.get(`button:contains(${initialTerm})`)
         .should('be.visible')
         .click()
+
+      cy.getLocalStorage('search')
+        .should('be.equal', initialTerm)
 
       cy.wait('@getInitialTermStories')
 
@@ -251,6 +257,9 @@ describe('Hacker Stories', () => {
           .type(`${newTerm}{enter}`)
   
         cy.wait('@getNewTermStories')
+
+        cy.getLocalStorage('search')
+          .should('be.equal', newTerm)
   
         cy.get('.item').should('have.length', 2)
         cy.get(`button:contains(${initialTerm})`)
@@ -261,11 +270,15 @@ describe('Hacker Stories', () => {
         cy.get('#search')
           .should('be.visible')
           .type(newTerm)
+
         cy.contains('Submit')
           .should('be.visible')
           .click()
   
         cy.wait('@getNewTermStories')
+
+        cy.getLocalStorage('search')
+          .should('be.equal', newTerm)
   
         cy.get('.item').should('have.length', 2)
         cy.get(`button:contains(${initialTerm})`)
@@ -280,6 +293,9 @@ describe('Hacker Stories', () => {
         cy.get('form').submit() // alternative way to submit form
   
         cy.wait('@getNewTermStories')
+
+        cy.getLocalStorage('search')
+          .should('be.equal', newTerm)
   
         cy.get('.item').should('have.length', 2)
       })
@@ -296,10 +312,15 @@ describe('Hacker Stories', () => {
           ).as('getRandomStories')
   
           Cypress._.times(6, () => {
+            const randomWord = faker.random.word()
+
             cy.get('#search')
               .clear()
-              .type(`${faker.random.word()}{enter}`)
+              .type(`${randomWord}{enter}`)
             cy.wait('@getRandomStories')
+            
+            cy.getLocalStorage('search')
+              .should('be.equal', randomWord)
           })
 
           cy.get('.last-searches')
